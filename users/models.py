@@ -12,7 +12,7 @@ class User(models.Model):
 class Repository(models.Model):
     name = models.CharField()
     token = models.CharField()
-
+    badge = models.ImageField(upload_to='pylint_badge')
 
 class Error(models.Model):
     error = models.ForeignKey(User, on_delete=models.CASCADE)
