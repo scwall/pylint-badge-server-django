@@ -8,4 +8,3 @@ urlpatterns = [
     path('', main_page,name='main_page'),
 
 ]
-
