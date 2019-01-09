@@ -16,7 +16,8 @@ def reports(request):
         travis_job_id = request.POST['travis_job_id']
         pylint_report = request.FILES['pylint-report'].read().decode('utf-8')
         pylint_token = jwt.decode(request.POST['pylint_badge_token'], SECRET_KEY, algorithms=['HS256'])
-        pylint_badge = get_rating_and_colour()
+        pylint_badge = get_rating_and_colour(pylint_report)
+
         return HttpResponse('Ok', status=200)
 
     return HttpResponse('bad request', status=400)

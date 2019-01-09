@@ -40,7 +40,8 @@ def get_rating_and_colour(report):
             colour = 'b94947'
         else:
             colour = '9d9d9d'
-    return (rating, colour)
+
+    return BADGE_TEMPLATE.format(rating, colour)
 def ensure_path(path):
     """Make sure the path exists, creating it if need be"""
     if not os.path.exists(path):
