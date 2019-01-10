@@ -6,25 +6,33 @@ class User(models.Model):
     """
     Model for the user
     """
-    name = models.CharField()
+    name = models.CharField(max_length=30)
+
 
 
 class Repository(models.Model):
-    name = models.CharField()
-    token = models.CharField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    token = models.CharField(max_length=255)
     badge = models.ImageField(upload_to='pylint_badge')
 
+
 class Error(models.Model):
-    error = models.ForeignKey(User, on_delete=models.CASCADE)
+    repository = models.ForeignKey(Repository, on_delete=models.CASCADE)
+    line = models.IntegerField()
+    description = models.CharField(max_length=255)
 
 
 class Warning(models.Model):
-    warning = models.ForeignKey(User, on_delete=models.CASCADE)
-
+    repository = models.ForeignKey(Repository, on_delete=models.CASCADE)
+    line = models.IntegerField()
+    description = models.CharField(max_length=255)
 
 class Refactor(models.Model):
-    refactor = models.ForeignKey(User, on_delete=models.CASCADE)
-
-
+    repository = models.ForeignKey(Repository, on_delete=models.CASCADE)
+    line = models.IntegerField()
+    description = models.CharField(max_length=255)
 class Convention(models.Model):
-    convention = models.ForeignKey(User, on_delete=models.CASCADE)
+    repository = models.ForeignKey(Repository, on_delete=models.CASCADE)
+    line = models.IntegerField()
+    description = models.CharField(max_length=255)
