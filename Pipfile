@@ -10,6 +10,7 @@ django = "*"
 pyjwt = "*"
 djangorestframework = "*"
 django-rest-auth = "*"
+router = "*"
 
 [requires]
 python_version = "3.5"

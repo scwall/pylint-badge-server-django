@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "72a0a4fb9f7f430ed1b5048d2b485ca63d4004f00efe5c735b5f264f754d9539"
+            "sha256": "36bdcef354bdaaf0aa3aec9492542c4da541163085324b101da842214afbd88a"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -33,11 +33,11 @@
         },
         "djangorestframework": {
             "hashes": [
-                "sha256:607865b0bb1598b153793892101d881466bd5a991de12bd6229abb18b1c86136",
-                "sha256:63f76cbe1e7d12b94c357d7e54401103b2e52aef0f7c1650d6c820ad708776e5"
+                "sha256:79c6efbb2514bc50cf25906d7c0a5cfead714c7af667ff4bd110312cd380ae66",
+                "sha256:a4138613b67e3a223be6c97f53b13d759c5b90d2b433bad670b8ebf95402075f"
             ],
             "index": "pypi",
-            "version": "==3.9.0"
+            "version": "==3.9.1"
         },
         "pyjwt": {
             "hashes": [
@@ -53,6 +53,14 @@
                 "sha256:d5f05e487007e29e03409f9398d074e158d920d36eb82eaf66fb1136b0c5374c"
             ],
             "version": "==2018.9"
+        },
+        "router": {
+            "hashes": [
+                "sha256:4ca308adec8b57bb4021a4ffd0d517e5ddd495c19f0a3e96b95b08a3fe87b88e",
+                "sha256:f3792acda2d801a2b218e875b5dc0a72744cce32ed60ce90403074f97a5bb3af"
+            ],
+            "index": "pypi",
+            "version": "==0.1"
         },
         "six": {
             "hashes": [
