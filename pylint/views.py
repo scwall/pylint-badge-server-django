@@ -31,7 +31,6 @@ class ReportsView(APIView):
                 return Response({'token': 'Invalid token. Please try again.'},status=status.HTTP_400_BAD_REQUEST)
             travis_job_id = self.request.data['travis_job_id']
             pylint_report = self.request.data['pylint_report']
-            print(public_token)
             repository = Repository.objects.get(id=int(public_token['repository_id']))
             pylint_svg = PylintSvg()
             pylint_svg.get_rating_and_colour(pylint_report)
