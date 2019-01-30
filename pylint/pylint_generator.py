@@ -2,8 +2,8 @@ import os
 import re
 
 
-class PylintSvg:
-    def __init__(self, report: str):
+class PylintGenerator:
+    def __init__(self, report: dict):
         self.BADGE_TEMPLATE = """<svg xmlns="http://www.w3.org/2000/svg" width="85" height="20">
           <linearGradient id="a" x2="0" y2="100%">
             <stop offset="0" stop-color="#bbb" stop-opacity=".1"/>
@@ -31,18 +31,30 @@ class PylintSvg:
         """
         self._rating = str()
         self._colour = str()
-        self.get_rating_and_colour(report)
-        self.error = dict()
-        self.warning = dict()
-        self.refactor = dict()
-        self.convention = dict()
+        self.error = list()
+        self.warning = list()
+        self.refactor = list()
+        self.convention = list()
+        self.set_rating_and_colour(report)
+        self.set_pylint_messages(report)
 
-    def get_rating_and_colour(self, report: str):
+    def set_rating_and_colour(self, report: dict):
+
+        statement = report['stats'].get('statement')
+        error = report['stats'].get('error', 0)
+        warning = report['stats'].get('warning', 0)
+        refactor = report['stats'].get('refactor', 0)
+        convention = report['stats'].get('convention', 0)
+
+        if not statement or statement <= 0:
+            return None
+
+        malus = float(5 * error + warning + refactor + convention)
+        malus_ratio = malus / statement
+
+        rating = abs(10.0 - (malus_ratio * 10))
         colour = '9d9d9d'
-        rating = 0
-        match = re.search("Your code has been rated at (.+?)/10", report)
-        if match:
-            rating = float(match.group(1))
+        if rating > 0:
             if rating >= 9 and rating <= 10:
                 colour = '44cc11'
             elif rating < 9 and rating >= 7:
@@ -58,27 +70,16 @@ class PylintSvg:
     def get_svg(self):
         return self.BADGE_TEMPLATE.format(self._rating, self._colour)
 
-    def set_pylint_messages(self, message_json: dict):
-        for message in message_json:
+    def set_pylint_messages(self, report: dict):
+        for message in report['messages']:
             if message['type'] == "convention":
-                self.convention['column'] = message['column']
-                self.convention['message'] = message['message']
-                self.convention['line'] = message['line']
+                self.convention.append(message)
             elif message['type'] == "error":
-                self.error['message'] = message['convention']
-                self.error['column'] = message['column']
-                self.error['message'] = message['message']
-                self.error['line'] = message['line']
+                self.error.append(message)
             elif message['type'] == "warning":
-                self.warning['message'] = message['convention']
-                self.warning['column'] = message['column']
-                self.warning['message'] = message['message']
-                self.warning['line'] = message['line']
+                self.warning.append(message)
             elif message['type'] == "refactor":
-                self.refactor['message'] = message['convention']
-                self.refactor['column'] = message['column']
-                self.refactor['message'] = message['message']
-                self.refactor['line'] = message['line']
+                self.refactor.append(message)
 
     @property
     def get_convention(self):

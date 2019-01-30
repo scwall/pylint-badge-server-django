@@ -11,7 +11,7 @@ from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
-from pylint.pylint_badge import PylintSvg
+from pylint.pylint_generator import PylintGenerator
 from pylint.serializers import UserSerializer, ReportsSerializer
 from pylint_badge_server.settings import SECRET_KEY
 from users.models import Repository
@@ -32,12 +32,10 @@ class ReportsView(APIView):
             travis_job_id = self.request.data['travis_job_id']
             pylint_report = self.request.data['pylint_report']
             repository = Repository.objects.get(id=int(public_token['repository_id']))
-            pylint_svg = PylintSvg()
-            pylint_svg.get_rating_and_colour(pylint_report)
-            # repository_verification = Repository.user.objects(id=public_token['user_id'])
+            pylint_svg = PylintGenerator(pylint_report)
+            repository_verification = Repository.user.objects(id=public_token['user_id'])
 
-            # if repository_verification.id == repository.id:
-            repository.badge.save(repository.name + ".svg", ContentFile(pylint_svg.get_svg) )
-
+            if repository_verification.id == repository.id:
+                repository.badge.save(repository.name + ".svg", ContentFile(pylint_svg.get_svg))
             return Response({'reports': 'received successful'},status=400)
         return Response(serializer.errors, status=status.HTTP_201_CREATED)
