@@ -29,13 +29,14 @@ class ReportsView(APIView):
             except ValueError:
                 return Response({'reports': 'report json file is not valid'}, status=status.HTTP_400_BAD_REQUEST)
             repository = Repository.objects.filter(user_id=public_token['user_id'],
-                                                   id=int(public_token['repository_id']))
+                                                   id=int(public_token['repository_id'])).first()
+
             if repository:
                 pylint_generator = PylintGenerator(pylint_report)
                 repository.badge.save(repository.name + ".svg", ContentFile(pylint_generator.get_svg))
 
                 for report in pylint_generator.get_convention:
-                    convention_pep8 = ConventionPep8.objects.filter(message_id=report['message-id'])
+                    convention_pep8 = ConventionPep8.objects.filter(message_id=report['message-id']).first()
                     if not convention_pep8:
                         convention_pep8 = ConventionPep8.objects.create(message=report['message'],
                                                                         symbol=report['symbol'],
@@ -50,7 +51,7 @@ class ReportsView(APIView):
                                            repository=repository
                                            )
                 for report in pylint_generator.get_warning:
-                    warning_pep8 = WarningPep8.objects.filter(message_id=report['message-id'])
+                    warning_pep8 = WarningPep8.objects.filter(message_id=report['message-id']).first()
                     if not warning_pep8:
                         warning_pep8 = WarningPep8.objects.create(message=report['message'], symbol=report['symbol'],
                                                                   message_id=report['message-id'])
@@ -64,7 +65,7 @@ class ReportsView(APIView):
                                            repository=repository
                                            )
                 for report in pylint_generator.get_error:
-                    error_pep8 = ErrorPep8.objects.filter(message_id=report['message-id'])
+                    error_pep8 = ErrorPep8.objects.filter(message_id=report['message-id']).first()
                     if not error_pep8:
                         error_pep8 = ErrorPep8.objects.create(message=report['message'], symbol=report['symbol'],
                                                               message_id=report['message-id'])
@@ -79,7 +80,7 @@ class ReportsView(APIView):
                                            )
 
                 for report in pylint_generator.get_refactor:
-                    refactor_pep8 = RefactorPep8.objects.filter(message_id=report['message-id'])
+                    refactor_pep8 = RefactorPep8.objects.filter(message_id=report['message-id']).first()
                     if not refactor_pep8:
                         refactor_pep8 = RefactorPep8.objects.create(message=report['message'], symbol=report['symbol'],
                                                                     message_id=report['message-id'])
