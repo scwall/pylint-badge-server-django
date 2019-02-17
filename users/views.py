@@ -13,3 +13,4 @@ class MainUser(ModelViewSet):
     def count(self,request,**kwargs):
         queryset = User.objects.count()
         return Response({"count": queryset})
+        
