@@ -7,7 +7,8 @@ __pycache__/
 
 # C extensions
 *.so
-
+bin1.py
+bin2.py
 # Distribution / packaging
 .Python
 build/
@@ -108,6 +109,9 @@ venv.bak/
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 # User-specific stuff
+.idea
+.vscode
+
 .idea/**/workspace.xml
 .idea/**/tasks.xml
 .idea/**/dictionaries
