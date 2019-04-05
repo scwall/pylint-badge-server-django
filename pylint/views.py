@@ -5,7 +5,6 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.utils import json
 from rest_framework.views import APIView
-
 from pylint.models import ConventionPep8, WarningPep8, ErrorPep8, RefactorPep8
 from pylint.pylint_generator import PylintGenerator
 from pylint.serializers import ReportsSerializer

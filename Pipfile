@@ -12,6 +12,9 @@ pyjwt = "*"
 djangorestframework = "*"
 django-rest-auth = "*"
 router = "*"
+pillow = "*"
+django-cors-headers = "*"
+djangorestframework-simplejwt = "*"
 
 [requires]
 python_version = "3.5"

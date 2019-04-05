@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
-
 from pylint_badge_server.settings import SECRET_KEY
 from users.storage import OverwriteStorage
 
