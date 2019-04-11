@@ -3,10 +3,6 @@ from django.db import models
 from users.models import Repository, Reports
 
 
-class Score(models.Model):
-    score = models.IntegerField()
-
-
 class ErrorPep8(models.Model):
     message = models.CharField(max_length=255)
     message_id = models.CharField(max_length=255)

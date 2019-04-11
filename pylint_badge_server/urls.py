@@ -18,19 +18,21 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 
-from users.urls import router_users
+#from users.urls import router_users
 from pylint.urls import router, urlpatterns
 from users.urls import urlpatternsuser
 from rest_framework_simplejwt import views as jwt_views
-
+import djoser
 # router = routers.DefaultRouter()
 # router.register(r"number-users",MainPageCount)
 urlpatterns = [
-    path('user/', include((urlpatternsuser, "users"), namespace='users')),
+    path('users/', include((urlpatternsuser, "users"), namespace='users')),
     path('pylint/', include((urlpatterns, "pylint"), namespace='pylint')),
     path('api-auth/', include('rest_framework.urls')),
     path('admin/', admin.site.urls),
-    path('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
+    path('auth/', include('djoser.urls')),
+    path('auth/', include('djoser.urls.jwt'))
+    # path('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    #path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
 
 ]
