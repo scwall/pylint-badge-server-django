@@ -11,9 +11,10 @@ from users.serializers import CurrentUserSerializer, RepositorySerializer
 from rest_framework import status
 
 class SnippetList(APIView):
+    permission_classes = (IsAuthenticated,)
     def get(self, request, format=None):
-        snippets = Repository.objects.filter(user_id=1).all()
-        print(snippets)
+        snippets = Repository.objects.filter(user=request.user).all()
+        print(request.user.id)
         serializer =  RepositorySerializer(snippets,many=True)
         return Response(serializer.data)
 
