@@ -7,8 +7,10 @@ from rest_framework_simplejwt import views as jwt_views
 
 from users import views
 
-#router_users = routers.SimpleRouter()
+# router_users = routers.SimpleRouter()
 # router_users.register(r'users', MainUser)
 urlpatternsuser = [
-                    path('snippets/', views.SnippetList.as_view())
-                  ]
+    path('repository/', views.RepositoryList.as_view()),
+    path('repository/<int:pk>/', views.RepositoryDetail.as_view()),
+
+]
