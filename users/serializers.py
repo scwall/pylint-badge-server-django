@@ -13,4 +13,4 @@ class RepositorySerializer(serializers.ModelSerializer):
 class ReportSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reports
-        fields = ('line','path','column','module','obj','repository','content_type')
+        fields = ('line','path','column','module','obj','content_type')

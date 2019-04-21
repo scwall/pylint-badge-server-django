@@ -33,8 +33,12 @@ class RepositoryDetail(APIView):
     def get_object(self, pk,request):
 
         try:
+
             repository = Repository.objects.filter(user=request.user).get(pk=pk)
             report = Reports.objects.filter(repository=repository)
+
+
+
             return (repository,report)
         except Repository.DoesNotExist:
             raise Http404
@@ -44,7 +48,8 @@ class RepositoryDetail(APIView):
         serializerRepository = RepositorySerializer(repository)
         serializerReport = ReportSerializer(report,many=True)
         return Response({'repository':serializerRepository.data,
-                         'report':serializerReport.data})
+                         'report':serializerReport.data,
+                         })
 
 
     def delete(self, request, pk, format=None):

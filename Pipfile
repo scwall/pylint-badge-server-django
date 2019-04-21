@@ -17,6 +17,7 @@ django-cors-headers = "*"
 djangorestframework-simplejwt = "*"
 djoser = "*"
 social-auth-app-django = "*"
+pylint-json2html = "*"
 
 [requires]
 python_version = "3.5"
