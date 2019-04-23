@@ -18,6 +18,7 @@ djangorestframework-simplejwt = "*"
 djoser = "*"
 social-auth-app-django = "*"
 pylint-json2html = "*"
+djangorestframework-stubs = "*"
 
 [requires]
 python_version = "3.5"

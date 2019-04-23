@@ -5,11 +5,10 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.utils import json
 from rest_framework.views import APIView
-from pylint.models import ConventionPep8, WarningPep8, ErrorPep8, RefactorPep8
 from pylint.pylint_generator import PylintGenerator
 from pylint.serializers import ReportsSerializer
 from pylint_badge_server.settings import SECRET_KEY
-from users.models import Repository, Reports
+from users.models import Repository, Report, ReportDetail
 
 
 class ReportsView(APIView):
@@ -33,72 +32,76 @@ class ReportsView(APIView):
                                                    id=int(public_token['repository_id'])).first()
 
             if repository:
+                report = Report.objects.filter(repository=repository).last()
+
                 pylint_generator = PylintGenerator(pylint_report)
                 repository.badge.save(
                     repository.name + ".svg", ContentFile(pylint_generator.get_svg))
 
-                for report in pylint_generator.get_convention:
-                    convention_pep8 = ConventionPep8.objects.filter(
-                        message_id=report['message-id']).first()
-                    if not convention_pep8:
-                        convention_pep8 = ConventionPep8.objects.create(message=report['message'],
-                                                                        symbol=report['symbol'],
-                                                                        message_id=report['message-id'])
+                if report and report.number_report is 10:
+                    Report.objects.filter(repository=repository).all().delete()
+                    report = Report.objects.create(number_report=1, score=pylint_generator.get_rating,
+                                                   repository=repository)
+                elif report:
+                    report = Report.objects.create(number_report=(report.number_report + 1),
+                                                   score=pylint_generator.get_rating, repository=repository)
+                else:
+                    report = Report.objects.create(number_report=1,
+                                                   score=pylint_generator.get_rating, repository=repository)
+                print(report.id)
+                print(report.number_report)
+                for report_generator in pylint_generator.get_convention:
+                    ReportDetail.objects.create(line=report_generator['line'],
+                                                path=report_generator['path'],
+                                                column=report_generator['column'],
+                                                module=report_generator['module'],
+                                                obj=report_generator['obj'],
+                                                message=report_generator['message'],
+                                                symbol=report_generator['symbol'],
+                                                message_id=report_generator['message-id'],
+                                                pep8_type="convention",
+                                                report=report
 
-                    Reports.objects.create(line=report['line'],
-                                           path=report['path'],
-                                           column=report['column'],
-                                           module=report['module'],
-                                           obj=report['obj'],
-                                           pep8=convention_pep8,
-                                           repository=repository
-                                           )
-                for report in pylint_generator.get_warning:
-                    warning_pep8 = WarningPep8.objects.filter(
-                        message_id=report['message-id']).first()
-                    if not warning_pep8:
-                        warning_pep8 = WarningPep8.objects.create(message=report['message'], symbol=report['symbol'],
-                                                                  message_id=report['message-id'])
+                                                )
+                for report_generator in pylint_generator.get_warning:
+                    ReportDetail.objects.create(line=report_generator['line'],
+                                                path=report_generator['path'],
+                                                column=report_generator['column'],
+                                                module=report_generator['module'],
+                                                obj=report_generator['obj'],
+                                                message=report_generator['message'],
+                                                symbol=report_generator['symbol'],
+                                                message_id=report_generator['message-id'],
+                                                pep8_type="warning",
+                                                report=report
 
-                    Reports.objects.create(line=report['line'],
-                                           path=report['path'],
-                                           column=report['column'],
-                                           module=report['module'],
-                                           obj=report['obj'],
-                                           pep8=warning_pep8,
-                                           repository=repository
-                                           )
-                for report in pylint_generator.get_error:
-                    error_pep8 = ErrorPep8.objects.filter(
-                        message_id=report['message-id']).first()
-                    if not error_pep8:
-                        error_pep8 = ErrorPep8.objects.create(message=report['message'], symbol=report['symbol'],
-                                                              message_id=report['message-id'])
+                                                )
+                for report_generator in pylint_generator.get_error:
+                    ReportDetail.objects.create(line=report_generator['line'],
+                                                path=report_generator['path'],
+                                                column=report_generator['column'],
+                                                module=report_generator['module'],
+                                                obj=report_generator['obj'],
+                                                message=report_generator['message'],
+                                                symbol=report_generator['symbol'],
+                                                message_id=report_generator['message-id'],
+                                                pep8_type="error",
+                                                report=report
 
-                    Reports.objects.create(line=report['line'],
-                                           path=report['path'],
-                                           column=report['column'],
-                                           module=report['module'],
-                                           obj=report['obj'],
-                                           pep8=error_pep8,
-                                           repository=repository
-                                           )
+                                                )
+                for report_generator in pylint_generator.get_refactor:
+                    ReportDetail.objects.create(line=report_generator['line'],
+                                                path=report_generator['path'],
+                                                column=report_generator['column'],
+                                                module=report_generator['module'],
+                                                obj=report_generator['obj'],
+                                                message=report_generator['message'],
+                                                symbol=report_generator['symbol'],
+                                                message_id=report_generator['message-id'],
+                                                pep8_type="refactor",
+                                                report=report
 
-                for report in pylint_generator.get_refactor:
-                    refactor_pep8 = RefactorPep8.objects.filter(
-                        message_id=report['message-id']).first()
-                    if not refactor_pep8:
-                        refactor_pep8 = RefactorPep8.objects.create(message=report['message'], symbol=report['symbol'],
-                                                                    message_id=report['message-id'])
-
-                    Reports.objects.create(line=report['line'],
-                                           path=report['path'],
-                                           column=report['column'],
-                                           module=report['module'],
-                                           obj=report['obj'],
-                                           pep8=refactor_pep8,
-                                           repository=repository
-                                           )
+                                                )
                 return Response({'reports': 'received successful'}, status=status.HTTP_201_CREATED)
             else:
                 return Response({'reports': 'report failed, token is corrupt'}, status=status.HTTP_400_BAD_REQUEST)

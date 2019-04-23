@@ -37,16 +37,19 @@ class Repository(models.Model):
                                        algorithm='HS256').decode('utf-8')
         super(Repository, self).save(*args, **kwargs)
 
+class Report(models.Model):
+    repository = models.ForeignKey(Repository, on_delete=models.CASCADE)
+    number_report = models.IntegerField()
+    score = models.IntegerField()
 
-class Reports(models.Model):
+class ReportDetail(models.Model):
     line = models.IntegerField()
     path = models.CharField(max_length=255)
     column = models.CharField(max_length=255)
     module = models.CharField(max_length=255)
     obj = models.CharField(max_length=255, null=True)
-    repository = models.ForeignKey(Repository, on_delete=models.CASCADE)
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
-    pep8 = GenericForeignKey('content_type', 'object_id')
-class Score(models.Model):
-    score = models.IntegerField()
+    report = models.ForeignKey(Report, on_delete=models.CASCADE)
+    pep8_type = models.CharField(max_length=255)
+    message = models.CharField(max_length=255)
+    message_id = models.CharField(max_length=255)
+    symbol = models.CharField(max_length=255)

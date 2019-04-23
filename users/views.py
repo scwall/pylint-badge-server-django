@@ -1,7 +1,7 @@
 # Create your views here.
 from django.http import Http404
 
-from .models import CustomUser, Repository, Reports
+from .models import CustomUser, Repository, Report
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -35,7 +35,7 @@ class RepositoryDetail(APIView):
         try:
 
             repository = Repository.objects.filter(user=request.user).get(pk=pk)
-            report = Reports.objects.filter(repository=repository)
+            report = Report.objects.filter(repository=repository)
 
 
 

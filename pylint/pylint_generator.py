@@ -29,7 +29,7 @@ class PylintGenerator:
           </g>
         </svg>
         """
-        self._rating = str()
+        self._rating = int()
         self._colour = str()
         self.error = list()
         self.warning = list()
@@ -39,7 +39,6 @@ class PylintGenerator:
         self.set_pylint_messages(report)
 
     def set_rating_and_colour(self, report: dict):
-
         statement = report['stats'].get('statement')
         error = report['stats'].get('error', 0)
         warning = report['stats'].get('warning', 0)
@@ -65,6 +64,10 @@ class PylintGenerator:
                 colour = '9d9d9d'
         self._rating = rating
         self._colour = colour
+
+    @property
+    def get_rating(self):
+        return int(self._rating)
 
     @property
     def get_svg(self):
