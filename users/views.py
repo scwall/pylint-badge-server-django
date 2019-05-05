@@ -1,7 +1,7 @@
 # Create your views here.
 from django.http import Http404
 
-from .models import CustomUser, Repository, Report
+from .models import CustomUser, Repository, Report, ReportDetail
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -9,7 +9,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet, ViewSet
-from users.serializers import CurrentUserSerializer, RepositorySerializer, ReportSerializer
+from users.serializers import CurrentUserSerializer, RepositorySerializer, ReportSerializer, ReportDetailSerializer
 from rest_framework import status
 
 class RepositoryList(APIView):
@@ -35,20 +35,22 @@ class RepositoryDetail(APIView):
         try:
 
             repository = Repository.objects.filter(user=request.user).get(pk=pk)
-            report = Report.objects.filter(repository=repository)
-
-
-
-            return (repository,report)
+            report = Report.objects.filter(repository=repository).last()
+            reportDetail = ReportDetail.objects.filter(report=report).all()
+            return (repository,report,reportDetail)
         except Repository.DoesNotExist:
             raise Http404
 
     def get(self, request, pk, format=None):
-        repository,report = self.get_object(pk,request)
+        repository,report,reportDetail = self.get_object(pk,request)
         serializerRepository = RepositorySerializer(repository)
-        serializerReport = ReportSerializer(report,many=True)
+        serializerReport = ReportSerializer(report)
+
+        serializerReportDetail = ReportDetailSerializer(reportDetail,many=True)
+        print(reportDetail)
         return Response({'repository':serializerRepository.data,
                          'report':serializerReport.data,
+                         'reportDetail':serializerReportDetail.data
                          })
 
 

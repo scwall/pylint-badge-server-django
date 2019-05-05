@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CustomUser, Repository, Report
+from .models import CustomUser, Repository, Report, ReportDetail
 
 
 class CurrentUserSerializer(serializers.ModelSerializer):
@@ -9,8 +9,12 @@ class CurrentUserSerializer(serializers.ModelSerializer):
 class RepositorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Repository
-        fields = ('name',)
+        fields = ('name','id')
 class ReportSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Report
-        fields = ('line','path','column','module','obj','content_type')
+            model = Report
+            fields = ('number_report','score')
+class ReportDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReportDetail
+        fields = ('line','path','column','module','obj','pep8_type','message','message_id','symbol')
