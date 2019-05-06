@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 from pylint.pylint_generator import PylintGenerator
 from pylint.serializers import ReportsSerializer
 from pylint_badge_server.settings import SECRET_KEY
-from users.models import Repository, Report, ReportDetail
+from users.models import Repository, Report, ReportPepConvention, ReportPepError, ReportPepRefactor, ReportPepWarning
 
 
 class ReportsView(APIView):
@@ -51,57 +51,53 @@ class ReportsView(APIView):
                 print(report.id)
                 print(report.number_report)
                 for report_generator in pylint_generator.get_convention:
-                    ReportDetail.objects.create(line=report_generator['line'],
-                                                path=report_generator['path'],
-                                                column=report_generator['column'],
-                                                module=report_generator['module'],
-                                                obj=report_generator['obj'],
-                                                message=report_generator['message'],
-                                                symbol=report_generator['symbol'],
-                                                message_id=report_generator['message-id'],
-                                                pep8_type="convention",
-                                                report=report
+                    ReportPepConvention.objects.create(line=report_generator['line'],
+                                                       path=report_generator['path'],
+                                                       column=report_generator['column'],
+                                                       module=report_generator['module'],
+                                                       obj=report_generator['obj'],
+                                                       message=report_generator['message'],
+                                                       symbol=report_generator['symbol'],
+                                                       message_id=report_generator['message-id'],
+                                                       report=report
 
-                                                )
+                                                       )
                 for report_generator in pylint_generator.get_warning:
-                    ReportDetail.objects.create(line=report_generator['line'],
-                                                path=report_generator['path'],
-                                                column=report_generator['column'],
-                                                module=report_generator['module'],
-                                                obj=report_generator['obj'],
-                                                message=report_generator['message'],
-                                                symbol=report_generator['symbol'],
-                                                message_id=report_generator['message-id'],
-                                                pep8_type="warning",
-                                                report=report
+                    ReportPepWarning.objects.create(line=report_generator['line'],
+                                                    path=report_generator['path'],
+                                                    column=report_generator['column'],
+                                                    module=report_generator['module'],
+                                                    obj=report_generator['obj'],
+                                                    message=report_generator['message'],
+                                                    symbol=report_generator['symbol'],
+                                                    message_id=report_generator['message-id'],
+                                                    report=report
 
-                                                )
+                                                    )
                 for report_generator in pylint_generator.get_error:
-                    ReportDetail.objects.create(line=report_generator['line'],
-                                                path=report_generator['path'],
-                                                column=report_generator['column'],
-                                                module=report_generator['module'],
-                                                obj=report_generator['obj'],
-                                                message=report_generator['message'],
-                                                symbol=report_generator['symbol'],
-                                                message_id=report_generator['message-id'],
-                                                pep8_type="error",
-                                                report=report
+                    ReportPepError.objects.create(line=report_generator['line'],
+                                                  path=report_generator['path'],
+                                                  column=report_generator['column'],
+                                                  module=report_generator['module'],
+                                                  obj=report_generator['obj'],
+                                                  message=report_generator['message'],
+                                                  symbol=report_generator['symbol'],
+                                                  message_id=report_generator['message-id'],
+                                                  report=report
 
-                                                )
+                                                  )
                 for report_generator in pylint_generator.get_refactor:
-                    ReportDetail.objects.create(line=report_generator['line'],
-                                                path=report_generator['path'],
-                                                column=report_generator['column'],
-                                                module=report_generator['module'],
-                                                obj=report_generator['obj'],
-                                                message=report_generator['message'],
-                                                symbol=report_generator['symbol'],
-                                                message_id=report_generator['message-id'],
-                                                pep8_type="refactor",
-                                                report=report
+                    ReportPepRefactor.objects.create(line=report_generator['line'],
+                                                     path=report_generator['path'],
+                                                     column=report_generator['column'],
+                                                     module=report_generator['module'],
+                                                     obj=report_generator['obj'],
+                                                     message=report_generator['message'],
+                                                     symbol=report_generator['symbol'],
+                                                     message_id=report_generator['message-id'],
+                                                     report=report
 
-                                                )
+                                                     )
                 return Response({'reports': 'received successful'}, status=status.HTTP_201_CREATED)
             else:
                 return Response({'reports': 'report failed, token is corrupt'}, status=status.HTTP_400_BAD_REQUEST)

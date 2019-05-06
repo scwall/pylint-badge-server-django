@@ -17,9 +17,10 @@ from django.conf.urls import url
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
-
+from django.conf.urls.static import static
 #from users.urls import router_users
 from pylint.urls import router, urlpatterns
+from pylint_badge_server import settings
 from users.urls import urlpatternsuser
 from rest_framework_simplejwt import views as jwt_views
 import djoser
@@ -35,4 +36,4 @@ urlpatterns = [
     # path('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
     #path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
 
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
