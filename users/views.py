@@ -25,7 +25,7 @@ class RepositoryList(APIView):
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        serializer = RepositoryCreateSerializer(data=request.data,context={'user': request.user})
+        serializer = RepositorySerializer(data=request.data,context={'user': request.user})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
