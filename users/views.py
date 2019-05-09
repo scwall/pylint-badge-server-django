@@ -10,8 +10,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet, ViewSet
-from users.serializers import CurrentUserSerializer, RepositorySerializer, ReportSerializer, ReportDetailSerializer, \
-    RepositoryCreateSerializer
+from users.serializers import CurrentUserSerializer, RepositorySerializer, ReportSerializer, ReportDetailSerializer
 from rest_framework import status
 
 class RepositoryList(APIView):
